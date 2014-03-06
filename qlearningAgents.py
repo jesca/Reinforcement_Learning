@@ -73,12 +73,7 @@ class QLearningAgent(ReinforcementAgent):
             if q_val>cur_qmax:
                 cur_qmax=q_val
         return cur_qmax
-            
-<<<<<<< HEAD
-    
-=======
-            
->>>>>>> cc6b2e3d06c8d5b9f61d47620e6346655c8f1ab8
+
         #util.raiseNotDefined()
 
     def computeActionFromQValues(self, state):
@@ -88,11 +83,7 @@ class QLearningAgent(ReinforcementAgent):
           you should return None.
         """
         "*** YOUR CODE HERE ***"
-<<<<<<< HEAD
-        cur_qmax=float('-inf')
-=======
         cur_qmax=float("-inf");
->>>>>>> cc6b2e3d06c8d5b9f61d47620e6346655c8f1ab8
         cur_bestaction=None
         if not self.getLegalActions(state):
             return None
@@ -116,7 +107,6 @@ class QLearningAgent(ReinforcementAgent):
           HINT: You might want to use util.flipCoin(prob)
           HINT: To pick randomly from a list, use random.choice(list)
         """
-<<<<<<< HEAD
         
         "*** YOUR CODE HERE ***"
 
@@ -134,14 +124,12 @@ class QLearningAgent(ReinforcementAgent):
 
 
 
-=======
         # Pick Action
         legalActions = self.getLegalActions(state)
         action = self.computeActionFromQValues(state)
         "*** YOUR CODE HERE ***"
         
         return action
->>>>>>> cc6b2e3d06c8d5b9f61d47620e6346655c8f1ab8
 
     def update(self, state, action, nextState, reward):
         
@@ -155,18 +143,15 @@ class QLearningAgent(ReinforcementAgent):
           it will be called on your behalf
         """
         "*** YOUR CODE HERE ***"
-<<<<<<< HEAD
         #incorporate the new estimate into a running avg:
         learning_rate=self.alpha
         discount = self.discount
         sample_val=reward+discount*self.computeValueFromQValues(nextState)
         new_qval=((1-learning_rate)*self.getQValue(state,action))+(learning_rate*sample_val)
         self.qvalues[(state,action)]=new_qval
-=======
         best_action=self.computeActionFromQValues(nextState)
         new_s_est = reward+(self.discount*self.computeValueFromQValues(nextState))
         self.qvalues[(state,action)]=new_s_est
->>>>>>> cc6b2e3d06c8d5b9f61d47620e6346655c8f1ab8
         #util.raiseNotDefined()
 
     def getPolicy(self, state):
