@@ -43,6 +43,7 @@ class QLearningAgent(ReinforcementAgent):
         "You can initialize Q-values here..."
         ReinforcementAgent.__init__(self, **args)
         self.qvalues=util.Counter()
+    
         "*** YOUR CODE HERE ***"
 
     def getQValue(self, state, action):
@@ -113,23 +114,14 @@ class QLearningAgent(ReinforcementAgent):
         # Pick Action
         random_choice=util.flipCoin(self.epsilon)
         legalActions = self.getLegalActions(state)
-        action = self.computeActionFromQValues(state)
+        action = self.getPolicy(state)
         
         if random_choice:
             if not legalActions:
                 return None
             return util.random.choice(legalActions)
         return action
-            
 
-
-
-        # Pick Action
-        legalActions = self.getLegalActions(state)
-        action = self.computeActionFromQValues(state)
-        "*** YOUR CODE HERE ***"
-        
-        return action
 
     def update(self, state, action, nextState, reward):
         
@@ -149,9 +141,7 @@ class QLearningAgent(ReinforcementAgent):
         sample_val=reward+discount*self.computeValueFromQValues(nextState)
         new_qval=((1-learning_rate)*self.getQValue(state,action))+(learning_rate*sample_val)
         self.qvalues[(state,action)]=new_qval
-        best_action=self.computeActionFromQValues(nextState)
-        new_s_est = reward+(self.discount*self.computeValueFromQValues(nextState))
-        self.qvalues[(state,action)]=new_s_est
+
         #util.raiseNotDefined()
 
     def getPolicy(self, state):
@@ -214,15 +204,39 @@ class ApproximateQAgent(PacmanQAgent):
           Should return Q(state,action) = w * featureVector
           where * is the dotProduct operator
         """
-        "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
-
+        "*** YOUR CODE HERE ***"""
+        featureVector=self.featExtractor.getFeatures(state,action)
+        #  print self.weights
+        # print featureVector
+        # return featureVector*self.weights
+        #fvec=featureVector.items()
+        total_q=0.0
+        for feature in featureVector:
+            
+            total_q+=featureVector[feature]*self.weights[feature]
+        return total_q
+        #return fvec*self.weights
+        # util.raiseNotDefined() 
+ 
+    
     def update(self, state, action, nextState, reward):
-        """
-           Should update your weights based on transition
-        """
-        "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        
+        featureVector=self.featExtractor.getFeatures(state,action)
+ 
+        difference=(reward+(self.discount*self.computeValueFromQValues(nextState))-self.getQValue(state,action))
+    
+        #update weights rather than updating q values directly
+        for feature in featureVector:
+            oldweight=self.weights[feature]
+            feature_num=featureVector[feature]
+            self.weights[feature]=oldweight+(self.alpha*difference*feature_num)
+
+
+
+        #  util.raiseNotDefined()
+
+  
+
 
     def final(self, state):
         "Called at the end of each game."
